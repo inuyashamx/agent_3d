@@ -228,8 +228,8 @@ function App() {
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* Panel izquierdo - Chat y Log */}
-      <div className="w-1/3 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
+      <div className="w-1/3 flex flex-col border-r border-gray-700 min-h-0">
+        <div className="p-4 border-b border-gray-700 flex-shrink-0">
           <h1 className="text-xl font-bold text-blue-400">
             AGI 3D MVP
           </h1>
@@ -238,14 +238,14 @@ function App() {
           </p>
         </div>
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Log de comandos */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-auto min-h-0">
             <CommandLog />
           </div>
           
           {/* Panel de chat */}
-          <div className="border-t border-gray-700">
+          <div className="border-t border-gray-700 flex-shrink-0">
             <ChatPanel onCommand={handleCommand} />
           </div>
         </div>

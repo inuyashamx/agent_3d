@@ -11,6 +11,12 @@ dist/
 build/
 *.local
 
+# Next.js
+.next/
+out/
+.vercel/
+.env*.local
+
 # Archivos de configuración local
 .env
 .env.local
