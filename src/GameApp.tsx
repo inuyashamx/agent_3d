@@ -4,6 +4,8 @@ import { Viewport } from './components/Viewport';
 import { ChatPanel } from './components/ChatPanel';
 import { CommandLog } from './components/CommandLog';
 import { TransformControls } from './components/TransformControls';
+import { TransformToolbar, TransformMode } from './components/TransformToolbar';
+import { TransformGizmos } from './components/TransformGizmos';
 import { useGameSceneStore, useGameSceneActions } from './state/gameSceneStore';
 import { parseCommand, generateResponse } from './ai/parser';
 import { Command } from './state/types';
@@ -23,6 +25,7 @@ function GameApp() {
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
+  const [transformMode, setTransformMode] = useState<TransformMode>('select');
   
   const scene = useGameSceneStore(state => state.scene);
   const assets = useGameSceneStore(state => state.assets);
@@ -283,6 +286,34 @@ function GameApp() {
     }
   }, [generateUniqueAssetName, addAsset, addInstance, scene.instances, assets, deleteInstance, updateInstance]);
 
+  // Manejar eliminación de objeto
+  const handleDeleteObject = useCallback(() => {
+    if (selectedInstanceId) {
+      deleteInstance(selectedInstanceId);
+      setSelectedInstanceId(null);
+    }
+  }, [selectedInstanceId, deleteInstance]);
+
+  // Manejar duplicación de objeto
+  const handleDuplicateObject = useCallback(() => {
+    if (selectedInstanceId) {
+      const instance = scene.instances[selectedInstanceId];
+      if (instance) {
+        const newTransform = {
+          position: [
+            instance.transform.position[0] + 1,
+            instance.transform.position[1],
+            instance.transform.position[2]
+          ] as [number, number, number],
+          rotation: [...instance.transform.rotation] as [number, number, number],
+          scale: [...instance.transform.scale] as [number, number, number]
+        };
+        
+        addInstance(instance.prefabId, newTransform);
+      }
+    }
+  }, [selectedInstanceId, scene.instances, addInstance]);
+
   // Manejar exportación
   const handleExport = useCallback(() => {
     const exportData = exportScene();
@@ -354,11 +385,24 @@ function GameApp() {
         <div className="flex-1 flex">
           {/* Viewport 3D */}
           <div className="flex-1 flex flex-col">
+            {/* Barra de herramientas */}
+            <TransformToolbar
+              mode={transformMode}
+              onModeChange={setTransformMode}
+              selectedInstanceId={selectedInstanceId}
+              onDelete={handleDeleteObject}
+              onDuplicate={handleDuplicateObject}
+            />
+            
             <div className="flex-1 relative">
               <Canvas camera={{ position: [0, 0, 5] }}>
                 <Viewport 
                   selectedInstanceId={selectedInstanceId}
                   onSelectInstance={setSelectedInstanceId}
+                />
+                <TransformGizmos
+                  selectedInstanceId={selectedInstanceId}
+                  mode={transformMode}
                 />
               </Canvas>
             </div>

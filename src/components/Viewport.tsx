@@ -4,13 +4,15 @@ import { useGameSceneStore } from '../state/gameSceneStore';
 import { ObjectSelector } from './ObjectSelector';
 
 // Componente principal del viewport
-export function Viewport({ selectedInstanceId, onSelectInstance }: { selectedInstanceId: string | null; onSelectInstance: (id: string) => void }) {
+export function Viewport({ selectedInstanceId, onSelectInstance }: { selectedInstanceId: string | null; onSelectInstance: (id: string | null) => void }) {
   const scene = useGameSceneStore(state => state.scene);
   const assets = useGameSceneStore(state => state.assets);
   const config = useGameSceneStore(state => state.config);
 
   const handleBackgroundClick = () => {
-    onSelectInstance(''); // Deseleccionar cuando se hace clic en el fondo
+    if (selectedInstanceId) {
+      onSelectInstance(null); // Deseleccionar cuando se hace clic en el fondo
+    }
   };
 
   return (

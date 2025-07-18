@@ -34,6 +34,15 @@ export function TransformControls({ selectedInstanceId }: TransformControlsProps
   const handleTransform = async (operation: 'move' | 'rotate' | 'scale', value: Vec3, isAbsolute: boolean = true) => {
     if (!selectedInstanceId || !selectedInstance) return;
 
+    // Actualizar el estado local inmediatamente para respuesta rápida
+    updateInstance(selectedInstanceId, {
+      transform: {
+        ...selectedInstance.transform,
+        [operation === 'move' ? 'position' : operation === 'rotate' ? 'rotation' : 'scale']: value
+      }
+    });
+
+    // Luego sincronizar con la API en segundo plano
     setIsUpdating(true);
     try {
       const payload = {
@@ -44,16 +53,12 @@ export function TransformControls({ selectedInstanceId }: TransformControlsProps
       };
 
       await transformInstanceInAPI(scene.id, selectedInstanceId, operation, payload);
-      
-      // Actualizar el estado local
-      updateInstance(selectedInstanceId, {
-        transform: {
-          ...selectedInstance.transform,
-          [operation === 'move' ? 'position' : operation === 'rotate' ? 'rotation' : 'scale']: value
-        }
-      });
     } catch (error) {
       console.error('Error transforming instance:', error);
+      // Si hay error, revertir el cambio local
+      updateInstance(selectedInstanceId, {
+        transform: selectedInstance.transform
+      });
     } finally {
       setIsUpdating(false);
     }
