@@ -79,8 +79,8 @@ export function ChatPanel({ onCommand }: ChatPanelProps) {
   const currentPlaceholder = placeholders[Math.floor(Math.random() * placeholders.length)];
 
   return (
-    <div className="p-4 bg-gray-800">
-      <form onSubmit={handleSubmit} className="mb-4">
+    <div className="p-4 bg-gray-800 border-t border-gray-700">
+      <form onSubmit={handleSubmit}>
         <div className="flex gap-2">
           <input
             ref={inputRef}
@@ -114,42 +114,7 @@ export function ChatPanel({ onCommand }: ChatPanelProps) {
         </div>
       </form>
 
-      {/* Sugerencias de comandos */}
-      <div className="mb-4">
-        <h3 className="text-sm font-medium text-gray-300 mb-2">
-          {config.language === 'es' ? 'Sugerencias:' : 'Suggestions:'}
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {suggestions.slice(0, 4).map((suggestion, index) => (
-            <button
-              key={index}
-              onClick={() => setInput(suggestion)}
-              className="px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition-colors text-gray-300"
-              disabled={isProcessing}
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Ayuda rápida */}
-      <div className="text-xs text-gray-400">
-        <details className="cursor-pointer">
-          <summary className="hover:text-gray-300">
-            {config.language === 'es' ? '💡 Ayuda' : '💡 Help'}
-          </summary>
-          <div className="mt-2 space-y-1">
-            <p><strong>{config.language === 'es' ? 'Crear:' : 'Create:'}</strong> {config.language === 'es' ? 'crea, haz, añade' : 'create, make, add'}</p>
-            <p><strong>{config.language === 'es' ? 'Borrar:' : 'Delete:'}</strong> {config.language === 'es' ? 'borra, elimina, quita' : 'delete, remove, destroy'}</p>
-            <p><strong>{config.language === 'es' ? 'Mover:' : 'Move:'}</strong> {config.language === 'es' ? 'mueve, coloca' : 'move, place'}</p>
-            <p><strong>{config.language === 'es' ? 'Colorear:' : 'Color:'}</strong> {config.language === 'es' ? 'colorea, pinta' : 'color, paint'}</p>
-            <p><strong>{config.language === 'es' ? 'Formas:' : 'Shapes:'}</strong> {config.language === 'es' ? 'pelota, cubo, cilindro, plano' : 'ball, cube, cylinder, plane'}</p>
-            <p><strong>{config.language === 'es' ? 'Posición:' : 'Position:'}</strong> x1 y2 z0, (1, 2, 0)</p>
-            <p><strong>{config.language === 'es' ? 'Colores:' : 'Colors:'}</strong> {config.language === 'es' ? 'rojo, verde, azul, amarillo' : 'red, green, blue, yellow'}</p>
-          </div>
-        </details>
-      </div>
     </div>
   );
 } 

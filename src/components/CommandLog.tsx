@@ -92,9 +92,9 @@ export function CommandLog() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+      <div className="p-4 border-b border-gray-700 flex justify-between items-center flex-shrink-0">
         <h2 className="text-lg font-semibold text-white">
           {config.language === 'es' ? 'Registro de Comandos' : 'Command Log'}
         </h2>
@@ -110,7 +110,7 @@ export function CommandLog() {
       {/* Log content */}
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 chat-log"
+        className="flex-1 overflow-y-auto p-4 space-y-4 chat-log min-h-0"
       >
         {chatLog.map((entry) => (
           <div

@@ -332,35 +332,18 @@ function GameApp() {
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="flex h-screen">
         {/* Panel lateral izquierdo */}
-        <div className="w-80 bg-gray-800 flex flex-col">
+        <div className="w-96 bg-gray-800 flex flex-col">
           <div className="p-4 border-b border-gray-700">
             <h1 className="text-xl font-bold">AGI 3D MVP</h1>
             <p className="text-sm text-gray-400">Game Engine System</p>
           </div>
           
-          <div className="flex-1 flex flex-col">
-            <div className="flex-1">
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 overflow-hidden">
               <CommandLog />
             </div>
-            <div className="flex-1">
+            <div className="flex-shrink-0">
               <ChatPanel onCommand={handleCommand} />
-            </div>
-          </div>
-          
-          <div className="p-4 border-t border-gray-700">
-            <div className="flex space-x-2">
-              <button
-                onClick={handleExport}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 px-3 py-2 rounded text-sm transition-colors"
-              >
-                Exportar
-              </button>
-              <button
-                onClick={() => window.open('/game-engine-demo', '_blank')}
-                className="flex-1 bg-green-500 hover:bg-green-600 px-3 py-2 rounded text-sm transition-colors"
-              >
-                Demo
-              </button>
             </div>
           </div>
         </div>
