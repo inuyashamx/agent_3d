@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Viewport } from './components/Viewport';
 import { ChatPanel } from './components/ChatPanel';
 import { CommandLog } from './components/CommandLog';
+import { TransformControls } from './components/TransformControls';
 import { useGameSceneStore, useGameSceneActions } from './state/gameSceneStore';
 import { parseCommand, generateResponse } from './ai/parser';
 import { Command } from './state/types';
@@ -21,6 +22,7 @@ function GameApp() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string | null>(null);
   
   const scene = useGameSceneStore(state => state.scene);
   const assets = useGameSceneStore(state => state.assets);
@@ -348,32 +350,42 @@ function GameApp() {
           </div>
         </div>
 
-        {/* Área principal */}
-        <div className="flex-1 flex flex-col">
+                {/* Área principal */}
+        <div className="flex-1 flex">
           {/* Viewport 3D */}
-          <div className="flex-1 relative">
-                         <Canvas camera={{ position: [0, 0, 5] }}>
-               <Viewport />
-             </Canvas>
-          </div>
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 relative">
+              <Canvas camera={{ position: [0, 0, 5] }}>
+                <Viewport 
+                  selectedInstanceId={selectedInstanceId}
+                  onSelectInstance={setSelectedInstanceId}
+                />
+              </Canvas>
+            </div>
 
-          {/* Estadísticas */}
-          <div className="bg-gray-800 p-4 border-t border-gray-700">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex space-x-6">
-                <span>Assets: {Object.keys(assets).length}</span>
-                <span>Instancias: {Object.keys(scene.instances).length}</span>
-                <span>Escena: {scene.name}</span>
-              </div>
-              <div className="flex space-x-2">
-                <span className="text-gray-400">
-                  {config.showGrid ? '🔲' : '⬜'} Grid
-                </span>
-                <span className="text-gray-400">
-                  {config.showAxes ? '🔴🟢🔵' : '⚪⚪⚪'} Axes
-                </span>
+            {/* Estadísticas */}
+            <div className="bg-gray-800 p-4 border-t border-gray-700">
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex space-x-6">
+                  <span>Assets: {Object.keys(assets).length}</span>
+                  <span>Instancias: {Object.keys(scene.instances).length}</span>
+                  <span>Escena: {scene.name}</span>
+                </div>
+                <div className="flex space-x-2">
+                  <span className="text-gray-400">
+                    {config.showGrid ? '🔲' : '⬜'} Grid
+                  </span>
+                  <span className="text-gray-400">
+                    {config.showAxes ? '🔴🟢🔵' : '⚪⚪⚪'} Axes
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* Panel lateral derecho - Controles de Transformación */}
+          <div className="w-80 bg-gray-900 p-4 border-l border-gray-700 overflow-y-auto">
+            <TransformControls selectedInstanceId={selectedInstanceId} />
           </div>
         </div>
       </div>
