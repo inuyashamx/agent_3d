@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados */
+.chat-log {
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #1a202c;
+}
+
+.chat-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-log::-webkit-scrollbar-track {
+  background: #1a202c;
+}
+
+.chat-log::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 3px;
+}
+
+.chat-log::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+.viewport-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.command-item {
+  @apply bg-gray-800 rounded-lg p-3 mb-2 border-l-4 border-blue-500;
+}
+
+.command-item.success {
+  @apply border-green-500;
+}
+
+.command-item.error {
+  @apply border-red-500;
+} 
