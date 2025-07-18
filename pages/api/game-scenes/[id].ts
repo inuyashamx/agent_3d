@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getScenesCollection } from '../../../lib/mongodb';
-import { SceneDataSchema } from '../../../src/state/types';
+import { getGameScenesCollection } from '../../../lib/mongodb';
+import { GameSceneSchema } from '../../../src/state/gameTypes';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,7 +16,7 @@ export default async function handler(
       });
     }
 
-    const collection = await getScenesCollection();
+    const collection = await getGameScenesCollection();
 
     if (req.method === 'GET') {
       // Obtener escena específica
@@ -37,17 +37,18 @@ export default async function handler(
 
     if (req.method === 'PUT') {
       // Actualizar escena
-      const { data: sceneData } = req.body;
+      const sceneData = req.body;
 
       // Validar datos de la escena
-      const validatedScene = SceneDataSchema.parse(sceneData);
+      const validatedScene = GameSceneSchema.parse(sceneData);
 
       const result = await collection.updateOne(
         { id },
         { 
           $set: { 
-            data: validatedScene, 
-            timestamp: new Date().toISOString() 
+            ...validatedScene,
+            updatedAt: new Date().toISOString(),
+            'lastModified.at': new Date().toISOString()
           } 
         }
       );
@@ -59,16 +60,18 @@ export default async function handler(
         });
       }
 
+      const updatedScene = await collection.findOne({ id });
+      
       return res.status(200).json({
         success: true,
-        data: { id, data: validatedScene }
+        data: updatedScene
       });
     }
 
     if (req.method === 'DELETE') {
       // Eliminar escena
       const result = await collection.deleteOne({ id });
-      
+
       if (result.deletedCount === 0) {
         return res.status(404).json({
           success: false,
@@ -89,7 +92,7 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Game Scene API Error:', error);
     return res.status(500).json({
       success: false,
       error: 'Internal server error'

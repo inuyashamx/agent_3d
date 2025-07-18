@@ -1,25 +1,25 @@
 import { MongoClient, Db, Collection } from 'mongodb';
-import { SceneData } from '@/state/types';
+import { Asset, GameScene, Organization, TeamMember, Project } from '@/state/gameTypes';
 
-// Tipos para MongoDB
-export interface SceneDocument {
+// Game Engine Documents
+export interface AssetDocument extends Asset {
   _id?: string;
-  id: string;
-  data: SceneData;
-  timestamp: string;
-  userId?: string;
 }
 
-export interface AppConfigDocument {
+export interface GameSceneDocument extends GameScene {
   _id?: string;
-  userId: string;
-  config: {
-    theme: string;
-    language: string;
-    autoSave: boolean;
-    [key: string]: any;
-  };
-  timestamp: string;
+}
+
+export interface OrganizationDocument extends Organization {
+  _id?: string;
+}
+
+export interface TeamMemberDocument extends TeamMember {
+  _id?: string;
+}
+
+export interface ProjectDocument extends Project {
+  _id?: string;
 }
 
 // Variables de entorno
@@ -56,14 +56,31 @@ export async function connectToDatabase() {
 }
 
 // Utilidades para obtener colecciones
-export async function getScenesCollection(): Promise<Collection<SceneDocument>> {
+
+// Game Engine Collections
+export async function getAssetsCollection(): Promise<Collection<AssetDocument>> {
   const { db } = await connectToDatabase();
-  return db.collection<SceneDocument>('scenes');
+  return db.collection<AssetDocument>('assets');
 }
 
-export async function getConfigCollection(): Promise<Collection<AppConfigDocument>> {
+export async function getGameScenesCollection(): Promise<Collection<GameSceneDocument>> {
   const { db } = await connectToDatabase();
-  return db.collection<AppConfigDocument>('config');
+  return db.collection<GameSceneDocument>('game_scenes');
+}
+
+export async function getOrganizationsCollection(): Promise<Collection<OrganizationDocument>> {
+  const { db } = await connectToDatabase();
+  return db.collection<OrganizationDocument>('organizations');
+}
+
+export async function getTeamMembersCollection(): Promise<Collection<TeamMemberDocument>> {
+  const { db } = await connectToDatabase();
+  return db.collection<TeamMemberDocument>('team_members');
+}
+
+export async function getProjectsCollection(): Promise<Collection<ProjectDocument>> {
+  const { db } = await connectToDatabase();
+  return db.collection<ProjectDocument>('projects');
 }
 
 // Función para cerrar conexión (útil para cleanup)

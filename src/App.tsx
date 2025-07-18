@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Viewport } from './components/Viewport';
 import { ChatPanel } from './components/ChatPanel';
 import { CommandLog } from './components/CommandLog';
-import { useSceneStore, useSceneActions } from './state/sceneStore';
+import { useGameSceneStore, useGameSceneActions } from './state/gameSceneStore';
 import { parseCommand, generateResponse } from './ai/parser';
 import { Command } from './state/types';
 import { 
@@ -12,17 +12,20 @@ import {
   loadConfig, 
   saveScene, 
   saveConfig,
-  getSystemStatus 
-} from './persist/mongoOnly';
+  getSystemStatus,
+  loadAssets,
+  saveAsset
+} from './persist/gameScenePersist';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
   
-  const scene = useSceneStore(state => state.scene);
-  const config = useSceneStore(state => state.config);
-  const { loadScene: loadSceneAction, updateConfig: updateConfigAction, addChatEntry, generateUniqueName, getObjectByName, addObject, updateObject, deleteObject, exportScene } = useSceneActions();
+  const scene = useGameSceneStore(state => state.scene);
+  const assets = useGameSceneStore(state => state.assets);
+  const config = useGameSceneStore(state => state.config);
+  const { loadScene: loadSceneAction, updateConfig: updateConfigAction, addChatEntry, generateUniqueAssetName, getAssetByName, addAsset, updateAsset, deleteAsset, addInstance, updateInstance, deleteInstance, exportScene } = useGameSceneActions();
 
   // Cargar datos iniciales - solo una vez
   useEffect(() => {

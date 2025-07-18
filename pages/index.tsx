@@ -1,6 +1,6 @@
 import React from 'react'
-import MainApp from '../src/App'
+import GameApp from '../src/GameApp'
 
 export default function Home() {
-  return <MainApp />
+  return <GameApp />
 } 

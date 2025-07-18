@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useChatLog, useConfig, useSceneActions } from '../state/sceneStore';
+import { useGameSceneStore, useGameSceneActions } from '../state/gameSceneStore';
 import { Command } from '../state/types';
 
 export function CommandLog() {
-  const chatLog = useChatLog();
-  const config = useConfig();
-  const { clearChatLog } = useSceneActions();
+  const chatLog = useGameSceneStore(state => state.chatLog);
+  const config = useGameSceneStore(state => state.config);
+  const { clearChatLog } = useGameSceneActions();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll al final cuando se añaden nuevos mensajes

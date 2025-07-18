@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { OrbitControls, Grid, Box, Sphere, Cylinder, Plane } from '@react-three/drei';
-import { useObjects, useConfig } from '../state/sceneStore';
+import { useGameSceneStore } from '../state/gameSceneStore';
 import { Obj3D } from '../state/types';
 import * as THREE from 'three';
 
@@ -193,8 +193,9 @@ function getObjectSize(obj: Obj3D): [number, number, number] {
 
 // Componente principal del viewport
 export function Viewport() {
-  const objects = useObjects();
-  const config = useConfig();
+  const scene = useGameSceneStore(state => state.scene);
+  const assets = useGameSceneStore(state => state.assets);
+  const config = useGameSceneStore(state => state.config);
 
   return (
     <>
@@ -280,13 +281,23 @@ export function Viewport() {
         </group>
       )}
 
-      {/* Renderizar todos los objetos */}
-      {Object.values(objects).map((obj) => (
-        <group key={obj.id}>
-          <Object3D obj={obj} />
-          <BoundingBox obj={obj} />
-        </group>
-      ))}
+      {/* Renderizar instancias */}
+      {Object.entries(scene.instances).map(([id, instance]) => {
+        const asset = assets[instance.prefabId];
+        if (!asset) return null;
+        
+        return (
+          <mesh
+            key={id}
+            position={instance.transform.position}
+            rotation={instance.transform.rotation}
+            scale={instance.transform.scale}
+          >
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color={asset.data.material?.color || '#888888'} />
+          </mesh>
+        );
+      })}
 
       {/* Plano invisible para el suelo (para sombras) */}
       <mesh

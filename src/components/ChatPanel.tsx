@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useConfig } from '../state/sceneStore';
+import { useGameSceneStore } from '../state/gameSceneStore';
 
 interface ChatPanelProps {
   onCommand: (command: string) => void;
@@ -9,7 +9,7 @@ export function ChatPanel({ onCommand }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const config = useConfig();
+  const config = useGameSceneStore(state => state.config);
 
   // Enfocar el input al montar el componente
   useEffect(() => {
