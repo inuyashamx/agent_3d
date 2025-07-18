@@ -19,8 +19,6 @@ export function saveScene(scene: SceneData): void {
     
     // Guardar nueva escena
     localStorage.setItem(SCENE_STORAGE_KEY, JSON.stringify(validatedScene));
-    
-    console.log('Escena guardada correctamente');
   } catch (error) {
     console.error('Error al guardar escena:', error);
     throw new Error('No se pudo guardar la escena');
@@ -36,7 +34,6 @@ export function loadScene(): SceneData | null {
     const parsed = JSON.parse(stored);
     const validatedScene = SceneDataSchema.parse(parsed);
     
-    console.log('Escena cargada correctamente');
     return validatedScene;
   } catch (error) {
     console.error('Error al cargar escena:', error);
@@ -68,8 +65,6 @@ export function saveConfig(config: AppConfig): void {
   try {
     const validatedConfig = AppConfigSchema.parse(config);
     localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(validatedConfig));
-    
-    console.log('Configuración guardada correctamente');
   } catch (error) {
     console.error('Error al guardar configuración:', error);
     throw new Error('No se pudo guardar la configuración');
@@ -85,7 +80,6 @@ export function loadConfig(): AppConfig | null {
     const parsed = JSON.parse(stored);
     const validatedConfig = AppConfigSchema.parse(parsed);
     
-    console.log('Configuración cargada correctamente');
     return validatedConfig;
   } catch (error) {
     console.error('Error al cargar configuración:', error);
