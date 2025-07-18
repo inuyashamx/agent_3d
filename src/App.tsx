@@ -4,9 +4,16 @@ import { Viewport } from './components/Viewport';
 import { ChatPanel } from './components/ChatPanel';
 import { CommandLog } from './components/CommandLog';
 import { useSceneStore, useSceneActions } from './state/sceneStore';
-import { loadScene, loadConfig, debouncedSaveScene, saveConfig } from './persist';
 import { parseCommand, generateResponse } from './ai/parser';
 import { Command } from './state/types';
+import { 
+  initializeSystem, 
+  loadScene, 
+  loadConfig, 
+  saveScene, 
+  saveConfig,
+  getSystemStatus 
+} from './persist/mongoOnly';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,14 +30,21 @@ function App() {
     
     const initializeApp = async () => {
       try {
+        // Inicializar sistema MongoDB
+        await initializeSystem();
+        
+        // Obtener estado del sistema
+        const status = await getSystemStatus();
+        console.log('Estado del sistema:', status);
+        
         // Cargar escena guardada
-        const savedScene = loadScene();
+        const savedScene = await loadScene();
         if (savedScene) {
           loadSceneAction(savedScene);
         }
 
         // Cargar configuración guardada
-        const savedConfig = loadConfig();
+        const savedConfig = await loadConfig();
         if (savedConfig) {
           updateConfigAction(savedConfig);
         }
@@ -51,7 +65,9 @@ function App() {
   useEffect(() => {
     if (initialized && scene && scene.updatedAt) {
       const timeoutId = setTimeout(() => {
-        debouncedSaveScene(scene);
+        saveScene(scene).catch(error => {
+          console.error('Error al guardar escena:', error);
+        });
       }, 1000);
       
       return () => clearTimeout(timeoutId);
@@ -62,7 +78,9 @@ function App() {
   useEffect(() => {
     if (initialized && config) {
       const timeoutId = setTimeout(() => {
-        saveConfig(config);
+        saveConfig(config).catch(error => {
+          console.error('Error al guardar configuración:', error);
+        });
       }, 500);
       
       return () => clearTimeout(timeoutId);
